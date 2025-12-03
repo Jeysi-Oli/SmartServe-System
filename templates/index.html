@@ -1,0 +1,100 @@
+{% extends "base.html" %}
+
+{% block content %}
+<main class="main-content">
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <h1 class="hero-title">Transform Community Services</h1>
+                <p class="hero-subtitle">SmartServe: Efficient, transparent, and technology-driven resident management</p>
+                <div class="hero-buttons">
+                    <a href="{{ url_for('login') }}" class="btn btn-primary btn-lg">Get Started</a>
+                    <a href="/how-it-works" class="btn btn-secondary btn-lg">Learn More</a>
+                </div>
+            </div>
+            <div class="hero-visual">
+                <div class="hero-box">
+                    <div class="box-item">🌐 Digital</div>
+                    <div class="box-item">⚡ Efficient</div>
+                    <div class="box-item">🔍 Transparent</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Key Benefits -->
+    <section class="benefits">
+        <div class="container">
+            <h2>Why Choose SmartServe?</h2>
+            <div class="benefits-grid">
+                <div class="benefit-card">
+                    <div class="benefit-icon">📊</div>
+                    <h3>Real-Time Tracking</h3>
+                    <p>Monitor your service requests and stay updated with instant notifications</p>
+                </div>
+                <div class="benefit-card">
+                    <div class="benefit-icon">🔒</div>
+                    <h3>Secure & Reliable</h3>
+                    <p>Your data is protected with enterprise-grade security and encryption</p>
+                </div>
+                <div class="benefit-card">
+                    <div class="benefit-icon">⚡</div>
+                    <h3>Fast Processing</h3>
+                    <p>Automated workflows reduce processing time and eliminate manual errors</p>
+                </div>
+                <div class="benefit-card">
+                    <div class="benefit-icon">🤝</div>
+                    <h3>Community Focused</h3>
+                    <p>Designed with residents and administrators in mind for optimal usability</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Preview -->
+    <section class="features-preview">
+        <div class="container">
+            <h2>Comprehensive Features</h2>
+            <div class="features-grid">
+                <div class="feature">
+                    <h3>👤 Resident Profiles</h3>
+                    <p>Centralized, secure storage of resident information and documentation</p>
+                </div>
+                <div class="feature">
+                    <h3>📋 Service Requests</h3>
+                    <p>Submit and track requests for certifications, documents, and inquiries</p>
+                </div>
+                <div class="feature">
+                    <h3>📄 Document Management</h3>
+                    <p>Issue certificates and official documents with digital signatures</p>
+                </div>
+                <div class="feature">
+                    <h3>📈 Analytics Dashboard</h3>
+                    <p>Generate reports and monitor service performance metrics</p>
+                </div>
+                <div class="feature">
+                    <h3>🔔 Notifications</h3>
+                    <p>Real-time updates on request status and important announcements</p>
+                </div>
+                <div class="feature">
+                    <h3>⚙️ Admin Tools</h3>
+                    <p>Powerful management tools for data validation and record maintenance</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta">
+        <div class="container">
+            <h2>Ready to Experience SmartServe?</h2>
+            <p>Join us in creating a more organized and responsive community</p>
+            <div class="cta-buttons">
+                <a href="{{ url_for('login') }}" class="btn btn-primary btn-lg">Resident Login</a>
+                <a href="{{ url_for('register') }}" class="btn btn-secondary btn-lg">Create Account</a>
+            </div>
+        </div>
+    </section>
+</main>
+{% endblock %}

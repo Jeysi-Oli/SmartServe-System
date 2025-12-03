@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block title %}Admin Portal - SmartServe{% endblock %}
+
+{% block content %}
+<main class="main-content">
+    <section class="portal-header admin-portal">
+        <div class="container">
+            <h1>Administration Portal</h1>
+            <p>Manage residents, process requests, and monitor service performance</p>
+        </div>
+    </section>
+
+    <section class="portal-content">
+        <div class="container">
+            <p style="text-align: center; margin-bottom: 2rem;">
+                <strong>Please log in with your admin credentials to access the admin portal.</strong><br>
+                <a href="{{ url_for('login') }}" class="btn btn-primary">Admin Login</a>
+            </p>
+        </div>
+    </section>
+</main>
+{% endblock %}

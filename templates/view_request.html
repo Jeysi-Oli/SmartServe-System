@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+
+{% block title %}View Request - SmartServe{% endblock %}
+
+{% block content %}
+<div class="page-header resident-portal">
+    <div class="container">
+        <h1>Request Details</h1>
+    </div>
+</div>
+
+<div class="auth-section">
+    <div class="container">
+        <div class="auth-container">
+            <div class="auth-form-wrapper">
+                <div class="request-details" style="background: #f8f9fa; padding: 2rem; border-radius: 8px;">
+                    <h2>Request #{{ request.id }}</h2>
+                    <p><strong>Document Type:</strong> {{ request.document_type|replace('_', ' ')|title }}</p>
+                    <p><strong>Status:</strong> <span class="status status-{{ request.status }}">{{ request.status|upper }}</span></p>
+                    <p><strong>Description:</strong> {{ request.description }}</p>
+                    <p><strong>Submitted:</strong> {{ request.created_at.strftime('%Y-%m-%d %H:%M') }}</p>
+                    <p><strong>Last Updated:</strong> {{ request.updated_at.strftime('%Y-%m-%d %H:%M') }}</p>
+                    {% if request.admin_notes %}
+                        <p><strong>Admin Notes:</strong> {{ request.admin_notes }}</p>
+                    {% endif %}
+                </div>
+                
+                <a href="{{ url_for('resident_dashboard') }}" class="btn btn-secondary btn-lg" style="margin-top: 2rem;">Back to Dashboard</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

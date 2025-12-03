@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+
+{% block title %}Submit Request - SmartServe{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <div class="container">
+        <h1>Submit Document Request</h1>
+        <p>Request the documents you need</p>
+    </div>
+</div>
+
+<div class="auth-section">
+    <div class="container">
+        <div class="auth-container">
+            <div class="auth-form-wrapper">
+                <h2>New Request</h2>
+                
+                {% with messages = get_flashed_messages(with_categories=true) %}
+                    {% if messages %}
+                        {% for category, message in messages %}
+                            <div class="alert alert-{{ category }}">{{ message }}</div>
+                        {% endfor %}
+                    {% endif %}
+                {% endwith %}
+                
+                <form method="POST" class="auth-form">
+                    {{ form.hidden_tag() }}
+                    
+                    <div class="form-group">
+                        {{ form.document_type.label }}
+                        {% if form.document_type.errors %}
+                            {{ form.document_type(class="form-control is-invalid") }}
+                            <div class="invalid-feedback">{% for error in form.document_type.errors %}{{ error }}{% endfor %}</div>
+                        {% else %}
+                            {{ form.document_type(class="form-control") }}
+                        {% endif %}
+                    </div>
+                    
+                    <div class="form-group">
+                        {{ form.description.label }}
+                        {% if form.description.errors %}
+                            {{ form.description(class="form-control is-invalid", rows=6) }}
+                            <div class="invalid-feedback">{% for error in form.description.errors %}{{ error }}{% endfor %}</div>
+                        {% else %}
+                            {{ form.description(class="form-control", rows=6, placeholder="Provide details about your request...") }}
+                        {% endif %}
+                    </div>
+                    
+                    <div class="form-group">
+                        {{ form.submit(class="btn btn-primary btn-lg") }}
+                    </div>
+                    
+                    <a href="{{ url_for('resident_dashboard') }}" class="btn btn-secondary btn-lg">Cancel</a>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

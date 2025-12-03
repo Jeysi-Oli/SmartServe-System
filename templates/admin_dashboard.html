@@ -1,0 +1,90 @@
+{% extends 'base.html' %}
+
+{% block title %}Admin Dashboard - SmartServe{% endblock %}
+
+{% block content %}
+<div class="page-header admin-portal">
+    <div class="container">
+        <h1>Admin Dashboard</h1>
+        <p>Manage requests and residents</p>
+    </div>
+</div>
+
+<div class="portal-content">
+    <div class="container">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }}">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+        
+        <!-- Dashboard Statistics -->
+        <div class="dashboard-section">
+            <h2>System Overview</h2>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <span class="stat-number">{{ stats.total_residents }}</span>
+                    <span>Total Residents</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number">{{ stats.total_requests }}</span>
+                    <span>Total Requests</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number">{{ stats.pending }}</span>
+                    <span>Pending Requests</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number">{{ stats.completed }}</span>
+                    <span>Completed</span>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Admin Actions -->
+        <div class="actions-section">
+            <h2>Admin Controls</h2>
+            <div class="action-buttons admin">
+                <a href="{{ url_for('admin_requests') }}" class="action-btn">
+                    <span class="icon">📋</span>
+                    <span>All Requests</span>
+                </a>
+                <a href="{{ url_for('admin_residents') }}" class="action-btn">
+                    <span class="icon">👥</span>
+                    <span>All Residents</span>
+                </a>
+                <a href="{{ url_for('logout') }}" class="action-btn">
+                    <span class="icon">🚪</span>
+                    <span>Logout</span>
+                </a>
+            </div>
+        </div>
+        
+        <!-- Recent Requests -->
+        <div class="requests-section">
+            <h2>Recent Requests</h2>
+            {% if requests %}
+                <div class="request-list">
+                    {% for req in requests[:6] %}
+                        <div class="request-item">
+                            <div class="request-header">
+                                <h3>{{ req.document_type|replace('_', ' ')|title }}</h3>
+                                <span class="status status-{{ req.status }}">{{ req.status|upper }}</span>
+                            </div>
+                            <p><strong>Request ID:</strong> #{{ req.id }}</p>
+                            <p><strong>From:</strong> {{ req.user.first_name }} {{ req.user.last_name }}</p>
+                            <p><strong>Email:</strong> {{ req.user.email }}</p>
+                            <p><strong>Submitted:</strong> {{ req.created_at.strftime('%Y-%m-%d %H:%M') }}</p>
+                            <a href="{{ url_for('process_request', request_id=req.id) }}" class="btn btn-primary btn-sm">Process Request</a>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <p>No requests at the moment.</p>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+
+{% block title %}View Resident - SmartServe{% endblock %}
+
+{% block content %}
+<div class="page-header admin-portal">
+    <div class="container">
+        <h1>Resident Profile</h1>
+    </div>
+</div>
+
+<div class="portal-content">
+    <div class="container">
+        <div class="auth-form-wrapper" style="max-width: 600px; margin: 0 auto; background: white; padding: 2rem; border-radius: 8px;">
+            <h2>{{ resident.first_name }} {{ resident.last_name }}</h2>
+            
+            <div style="background: #f8f9fa; padding: 2rem; border-radius: 8px; margin-bottom: 2rem;">
+                <p><strong>Username:</strong> {{ resident.username }}</p>
+                <p><strong>Email:</strong> {{ resident.email }}</p>
+                <p><strong>Phone:</strong> {{ resident.phone }}</p>
+                <p><strong>Address:</strong> {{ resident.address }}</p>
+                <p><strong>Member Since:</strong> {{ resident.created_at.strftime('%Y-%m-%d') }}</p>
+                <p><strong>Total Requests:</strong> {{ requests|length }}</p>
+            </div>
+            
+            <h3>Resident's Requests</h3>
+            {% if requests %}
+                <div class="request-list">
+                    {% for req in requests %}
+                        <div class="request-item">
+                            <div class="request-header">
+                                <h3>{{ req.document_type|replace('_', ' ')|title }}</h3>
+                                <span class="status status-{{ req.status }}">{{ req.status|upper }}</span>
+                            </div>
+                            <p><strong>Request ID:</strong> #{{ req.id }}</p>
+                            <p><strong>Submitted:</strong> {{ req.created_at.strftime('%Y-%m-%d %H:%M') }}</p>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <p>No requests from this resident.</p>
+            {% endif %}
+            
+            <a href="{{ url_for('admin_residents') }}" class="btn btn-secondary btn-lg" style="margin-top: 2rem;">Back to Residents</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

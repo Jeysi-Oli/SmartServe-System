@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+
+{% block title %}All Requests - SmartServe{% endblock %}
+
+{% block content %}
+<div class="page-header admin-portal">
+    <div class="container">
+        <h1>All Requests</h1>
+        <p>Review and process all submitted requests</p>
+    </div>
+</div>
+
+<div class="portal-content">
+    <div class="container">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }}">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+        
+        <div class="requests-section">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+                <h2>Requests List</h2>
+                <a href="{{ url_for('admin_dashboard') }}" class="btn btn-secondary">Back to Dashboard</a>
+            </div>
+            
+            {% if requests %}
+                <div class="request-list">
+                    {% for req in requests %}
+                        <div class="request-item">
+                            <div class="request-header">
+                                <h3>{{ req.document_type|replace('_', ' ')|title }}</h3>
+                                <span class="status status-{{ req.status }}">{{ req.status|upper }}</span>
+                            </div>
+                            <p><strong>Request ID:</strong> #{{ req.id }}</p>
+                            <p><strong>Resident:</strong> {{ req.user.first_name }} {{ req.user.last_name }}</p>
+                            <p><strong>Email:</strong> {{ req.user.email }}</p>
+                            <p><strong>Phone:</strong> {{ req.user.phone }}</p>
+                            <p><strong>Submitted:</strong> {{ req.created_at.strftime('%Y-%m-%d %H:%M') }}</p>
+                            <p><strong>Description:</strong> {{ req.description }}</p>
+                            <a href="{{ url_for('process_request', request_id=req.id) }}" class="btn btn-primary btn-sm">Process Request</a>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <p>No requests found.</p>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

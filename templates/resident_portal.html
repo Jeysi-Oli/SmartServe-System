@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block title %}Resident Portal - SmartServe{% endblock %}
+
+{% block content %}
+<main class="main-content">
+    <section class="portal-header resident-portal">
+        <div class="container">
+            <h1>Resident Portal</h1>
+            <p>Manage your profile and track your service requests</p>
+        </div>
+    </section>
+
+    <section class="portal-content">
+        <div class="container">
+            <p style="text-align: center; margin-bottom: 2rem;">
+                <strong>Please log in to access the resident portal.</strong><br>
+                <a href="{{ url_for('login') }}" class="btn btn-primary">Login</a>
+                <a href="{{ url_for('register') }}" class="btn btn-secondary" style="margin-left: 1rem;">Register</a>
+            </p>
+        </div>
+    </section>
+</main>
+{% endblock %}
