@@ -1,7 +1,6 @@
 -- schema_v1.sql
 -- Project: SmartServe
 -- Description: Initial database schema (3NF Compliant)
--- Authors: JC, AM, JG, AD, AG
 
 -- Enable Foreign Key support for SQLite
 PRAGMA foreign_keys = ON;
