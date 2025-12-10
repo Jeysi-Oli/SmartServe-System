@@ -32,12 +32,12 @@ class LoginForm(FlaskForm):
 
 class RequestForm(FlaskForm):
     document_type = SelectField('Document Type', choices=[
-        ('birth_certificate', 'Birth Certificate'),
-        ('marriage_certificate', 'Marriage Certificate'),
-        ('death_certificate', 'Death Certificate'),
-        ('residency_cert', 'Residency Certificate'),
+        ('clearance_cert', 'Barangay Clearance Certificate'),
+        ('residency_cert', 'Barangay Residency Certificate'),
+        ('indigency_cert', 'Barangay Indigency Certificate'),
+        ('good_moral_cert', 'Barangay Good Moral Character Certificate'),
         ('id_verification', 'ID Verification'),
-        ('income_cert', 'Income Certificate'),
+        ('first_job_cert', 'First-time Job Seeker Certificate'),
         ('other', 'Other')
     ], validators=[DataRequired()])
     description = TextAreaField('Description/Details', validators=[Length(min=10, max=500)])
