@@ -4,22 +4,25 @@ from functools import wraps
 from datetime import datetime
 import os
 
-# --- MODULAR IMPORTS (Requirement Compliance) ---
+# --- MODULAR IMPORTS ---
 from models import db, User, Request
 from forms import RegisterForm, LoginForm, RequestForm, AdminNoteForm
 
-# Initialize Flask app
+# ==================== APP CONFIGURATION ====================
 app = Flask(__name__)
-app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'default-key-for-dev')
+
+# Security and Database Configuration
+app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'default-key-for-dev') # Change this in production
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///smartserve.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
-# Connect Database and CSRF
+# Initialize Extensions
 db.init_app(app)
-csrf = CSRFProtect(app)
+csrf = CSRFProtect(app) # Protects forms against CSRF attacks
 
-# ==================== DECORATORS ====================
+# ==================== CUSTOM DECORATORS ====================
 def login_required(f):
+    """Decorator to ensure user is logged in before accessing a route."""
     @wraps(f)
     def decorated_function(*args, **kwargs):
         if 'user_id' not in session:
@@ -29,11 +32,14 @@ def login_required(f):
     return decorated_function
 
 def admin_required(f):
+    """Decorator to restrict access to Administrators only."""
     @wraps(f)
     def decorated_function(*args, **kwargs):
         if 'user_id' not in session:
             flash('Please log in first.', 'warning')
             return redirect(url_for('login'))
+        
+        # Verify if current user is actually an admin
         user = User.query.get(session['user_id'])
         if not user or not user.is_admin():
             flash('Access denied. Admin only.', 'danger')
@@ -41,7 +47,7 @@ def admin_required(f):
         return f(*args, **kwargs)
     return decorated_function
 
-# ==================== PUBLIC ROUTES ====================
+# ==================== PUBLIC ROUTES (Landing Page) ====================
 @app.route('/')
 def index():
     return render_template('index.html')
@@ -61,14 +67,16 @@ def how_it_works():
 @app.route('/contact', methods=['GET', 'POST'])
 def contact():
     if request.method == 'POST':
+        # Logic for sending email could be added here
         return jsonify({'success': True, 'message': 'Message received'})
     return render_template('contact.html')
 
-# ==================== AUTH ROUTES ====================
+# ==================== AUTHENTICATION ROUTES ====================
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     form = RegisterForm()
     if form.validate_on_submit():
+        # Create new user object
         user = User(
             username=form.username.data,
             email=form.email.data,
@@ -76,11 +84,14 @@ def register():
             last_name=form.last_name.data,
             phone=form.phone.data,
             address=form.address.data,
-            role='resident'
+            role='resident' # Default role
         )
-        user.set_password(form.password.data)
+        user.set_password(form.password.data) # Hash password
+        
+        # Save to database
         db.session.add(user)
         db.session.commit()
+        
         flash('Account created! Please log in.', 'success')
         return redirect(url_for('login'))
     return render_template('register.html', form=form)
@@ -89,16 +100,21 @@ def register():
 def login():
     form = LoginForm()
     if form.validate_on_submit():
+        # Check if user exists
         user = User.query.filter_by(email=form.email.data).first()
+        
         if user and user.check_password(form.password.data):
+            # Verify role match
             if user.role != form.role.data:
                 flash('Invalid role selected.', 'danger')
                 return redirect(url_for('login'))
             
+            # Set Session Variables
             session['user_id'] = user.id
             session['username'] = user.username
             session['role'] = user.role
             
+            # Redirect based on role
             target = 'admin_dashboard' if user.is_admin() else 'resident_dashboard'
             return redirect(url_for(target))
         else:
@@ -108,18 +124,22 @@ def login():
 @app.route('/logout')
 @login_required
 def logout():
-    session.clear()
+    session.clear() # Clear all session data
     flash('Logged out successfully.', 'info')
     return redirect(url_for('index'))
 
-# ==================== RESIDENT ROUTES ====================
+# ==================== RESIDENT MODULE ROUTES ====================
 @app.route('/resident/dashboard')
 @login_required
 def resident_dashboard():
     user = User.query.get(session['user_id'])
+    # Security check: Prevent admin from accessing resident view
     if user.is_admin(): return redirect(url_for('admin_dashboard'))
     
+    # Fetch requests for this specific user only
     requests = Request.query.filter_by(user_id=user.id).order_by(Request.created_at.desc()).all()
+    
+    # Calculate stats
     stats = {
         'total': len(requests),
         'pending': len([r for r in requests if r.status == 'pending']),
@@ -133,7 +153,9 @@ def resident_dashboard():
 def submit_request():
     user = User.query.get(session['user_id'])
     form = RequestForm()
+    
     if form.validate_on_submit():
+        # Create new request linked to current user
         new_request = Request(
             user_id=user.id,
             document_type=form.document_type.data,
@@ -141,6 +163,7 @@ def submit_request():
         )
         db.session.add(new_request)
         db.session.commit()
+        
         flash('Request submitted!', 'success')
         return redirect(url_for('resident_dashboard'))
     return render_template('submit_request.html', user=user, form=form)
@@ -149,17 +172,22 @@ def submit_request():
 @login_required
 def view_request(request_id):
     req = Request.query.get_or_404(request_id)
+    
+    # Authorization Check: Ensure user owns this request
     if req.user_id != session['user_id']:
         flash('Permission denied.', 'danger')
         return redirect(url_for('resident_dashboard'))
+        
     return render_template('view_request.html', request=req)
 
-# ==================== ADMIN ROUTES ====================
+# ==================== ADMIN MODULE ROUTES ====================
 @app.route('/admin/dashboard')
 @admin_required
 def admin_dashboard():
+    # Fetch all data for oversight
     all_requests = Request.query.order_by(Request.created_at.desc()).all()
     all_users = User.query.filter_by(role='resident').all()
+    
     stats = {
         'total_requests': len(all_requests),
         'pending': len([r for r in all_requests if r.status == 'pending']),
@@ -179,10 +207,13 @@ def admin_requests():
 def process_request(request_id):
     req = Request.query.get_or_404(request_id)
     form = AdminNoteForm()
+    
     if form.validate_on_submit():
+        # Update Request Status and Notes
         req.status = form.status.data
         req.admin_notes = form.admin_notes.data
         req.updated_at = datetime.utcnow()
+        
         db.session.commit()
         flash('Request updated.', 'success')
         return redirect(url_for('admin_requests'))
@@ -198,12 +229,14 @@ def admin_residents():
 @admin_required
 def view_resident(resident_id):
     resident = User.query.get_or_404(resident_id)
+    # Fetch specific requests for this resident
     requests = Request.query.filter_by(user_id=resident_id).all()
     return render_template('view_resident.html', resident=resident, requests=requests)
 
-# ==================== CONTEXT PROCESSOR & RUN ====================
+# ==================== GLOBAL CONTEXT & STARTUP ====================
 @app.context_processor
 def inject_user():
+    """Makes 'current_user' available in ALL HTML templates automatically."""
     user = None
     if 'user_id' in session:
         user = User.query.get(session['user_id'])
@@ -211,5 +244,5 @@ def inject_user():
 
 if __name__ == '__main__':
     with app.app_context():
-        db.create_all()  # Auto-creates tables if they don't exist
+        db.create_all()  # Checks and creates tables if they don't exist
     app.run(debug=True)

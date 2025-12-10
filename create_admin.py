@@ -3,11 +3,11 @@ from models import User
 
 def create_admin():
     """
-    Creates a default Administrator account if one doesn't exist.
-    Uses the main smartserve.db database.
+    Utility Script: Creates a default Administrator account.
+    Run this once to set up the system.
     """
     with app.app_context():
-        # Check kung may admin na para iwas duplicate
+        # Check for existing admin to prevent duplicates
         admin = User.query.filter_by(role='admin').first()
         if admin:
             print(f"Admin account already exists: {admin.username}")
@@ -15,7 +15,7 @@ def create_admin():
 
         print("Creating default Admin account...")
         
-        # Create the Admin User object
+        # Create Admin Object
         new_admin = User(
             username='admin',
             email='admin@smartserve.com',
@@ -26,10 +26,10 @@ def create_admin():
             address='Barangay Hall'
         )
         
-        # Set the password (hashing is handled by the model)
+        # Hash the password
         new_admin.set_password('admin123') 
 
-        # Save to database
+        # Commit to Database
         db.session.add(new_admin)
         db.session.commit()
         

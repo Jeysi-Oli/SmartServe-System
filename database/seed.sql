@@ -1,8 +1,10 @@
--- seed.sql
--- Description: Sample Data for SmartServe (20 Residents & Requests)
--- Requirement: At least 20 records per table
+-- Project: SmartServe (Sample Data)
+-- Description: Seed Data for Barangay Document Management System (Testing Purposes)
 
--- 1. INSERT SAMPLE USERS (Residents)
+-- ==========================================
+-- 1. SAMPLE RESIDENTS
+-- Passwords are placeholders for testing
+-- ==========================================
 INSERT INTO user (username, email, password, role, first_name, last_name, phone, address) VALUES 
 ('juan_delacruz', 'juan@gmail.com', 'scrypt:32768:8:1$DummyHash...', 'resident', 'Juan', 'Dela Cruz', '09171234567', 'Purok 1, Batangas City'),
 ('maria_clara', 'maria@gmail.com', 'scrypt:32768:8:1$DummyHash...', 'resident', 'Maria', 'Clara', '09171234568', 'Purok 2, Batangas City'),
@@ -25,7 +27,10 @@ INSERT INTO user (username, email, password, role, first_name, last_name, phone,
 ('emilio_jacinto', 'dimasalang@gmail.com', 'scrypt:32768:8:1$DummyHash...', 'resident', 'Emilio', 'Jacinto', '09171234585', 'Purok 1, Batangas City'),
 ('miguel_malvar', 'malvar@gmail.com', 'scrypt:32768:8:1$DummyHash...', 'resident', 'Miguel', 'Malvar', '09171234586', 'Purok 2, Batangas City');
 
--- 2. INSERT SAMPLE REQUESTS
+-- ==========================================
+-- 2. SAMPLE REQUESTS
+-- Linked to User IDs above
+-- ==========================================
 INSERT INTO request (user_id, document_type, description, status) VALUES
 (1, 'barangay_clearance', 'For employment purposes', 'pending'),
 (2, 'residency_cert', 'Proof of residency for bank', 'approved'),
