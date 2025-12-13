@@ -6,7 +6,7 @@
 
 ## 📄 Documentation
 
-View the full project documentation here: [SmartServe - Project Documentation](documentation/SmartServe - Project Documentation.pdf)
+View the full project documentation here: [SmartServe - Project Documentation](documentation/SmartServe%20-%20Project%20Documentation.pdf)
 
 ---
 
