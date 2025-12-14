@@ -1,4 +1,4 @@
-# SmartServe: Resident Information and Public Service System
+# SmartServe: Integrated Resident Information and Public Service Management System
 
 > **A Combined Final Project for CS 121 (Advanced Computer Programming) and IT 211 (Database Management Systems).**
 
@@ -10,7 +10,7 @@ View the full project documentation here: [SmartServe - Project Documentation](d
 
 ---
 
-### Development Team (Credits)
+### Development Team
 
 -   **Team Lead & Lead Developer:** Oli, John Clarence M.
 -   **Core Developer & Backend Specialist:** Orias, John Gilbert R.
