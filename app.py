@@ -3,6 +3,7 @@ from flask_wtf.csrf import CSRFProtect
 from functools import wraps
 from datetime import datetime
 import os
+import sqlite3  # <--- ADDED THIS
 
 # --- MODULAR IMPORTS ---
 from models import db, User, Request
@@ -19,6 +20,13 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 # Initialize Extensions
 db.init_app(app)
 csrf = CSRFProtect(app) # Protects forms against CSRF attacks
+
+# ==================== HELPER FUNCTIONS ====================
+def get_db_connection():
+    """Helper function to connect to the database for raw SQL queries."""
+    conn = sqlite3.connect('instance/smartserve.db')
+    conn.row_factory = sqlite3.Row
+    return conn
 
 # ==================== CUSTOM DECORATORS ====================
 def login_required(f):
@@ -179,6 +187,24 @@ def view_request(request_id):
         return redirect(url_for('resident_dashboard'))
         
     return render_template('view_request.html', request=req)
+
+@app.route('/profile')
+def profile():
+    # 1. Security Check: Dapat naka-login
+    if 'user_id' not in session:
+        return redirect(url_for('login'))
+    
+    # 2. Get User from DB
+    user_id = session['user_id']
+    conn = get_db_connection()
+    user = conn.execute('SELECT * FROM user WHERE id = ?', (user_id,)).fetchone()
+    conn.close()
+    
+    # 3. Show Page
+    if user is None:
+        return redirect(url_for('login'))
+        
+    return render_template('profile.html', user=user)
 
 # ==================== ADMIN MODULE ROUTES ====================
 @app.route('/admin/dashboard')

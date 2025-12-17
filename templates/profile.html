@@ -1,0 +1,101 @@
+{% extends 'base.html' %} {% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white text-left">
+                    <h4 class="mb-0" style="font-weight: bold">
+                        <i class="fas fa-user-circle"></i> My Profile
+                    </h4>
+                </div>
+
+                <div class="card-body text-left">
+                    <div
+                        class="d-flex align-items-center mb-4 border-bottom pb-3"
+                    >
+                        <img
+                            src="https://ui-avatars.com/api/?name={{ user.first_name }}+{{ user.last_name }}&background=random&size=128&bold=true"
+                            class="rounded-circle mr-4 shadow-sm"
+                            style="
+                                border: 4px solid white;
+                                box-shadow: 0 0 10px rgba(0, 0, 0, 0.15);
+                                width: 100px;
+                                height: 100px;
+                            "
+                        />
+
+                        <div>
+                            <h2 class="mb-0 text-dark font-weight-bold">
+                                {{ user.first_name }} {{ user.last_name }}
+                            </h2>
+                            <span
+                                class="badge badge-info px-3 py-2 mt-1"
+                                style="font-size: 0.9rem"
+                            >
+                                {{ user.role }}
+                            </span>
+                        </div>
+                    </div>
+
+                    <h5 class="text-muted mb-3">Personal Information</h5>
+
+                    <table class="table table-borderless" style="width: 100%">
+                        <tbody>
+                            <tr>
+                                <td
+                                    style="
+                                        width: 30%;
+                                        font-weight: bold;
+                                        color: #555;
+                                    "
+                                >
+                                    Username:
+                                </td>
+                                <td style="width: 70%">{{ user.username }}</td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: bold; color: #555">
+                                    Email:
+                                </td>
+                                <td>{{ user.email }}</td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: bold; color: #555">
+                                    Phone:
+                                </td>
+                                <td>{{ user.phone }}</td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: bold; color: #555">
+                                    Address:
+                                </td>
+                                <td>{{ user.address }}</td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: bold; color: #555">
+                                    Member Since:
+                                </td>
+                                <td>
+                                    {% if user.created_at %} {{ user.created_at
+                                    }} {% else %}
+                                    <span class="text-muted">N/A</span>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <div class="mt-4 border-top pt-3 text-left">
+                        <a
+                            href="{{ url_for('resident_dashboard') }}"
+                            class="btn btn-secondary"
+                        >
+                            <i class="fas fa-arrow-left"></i> Back to Dashboard
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

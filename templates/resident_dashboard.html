@@ -1,8 +1,5 @@
-{% extends 'base.html' %}
-
-{% block title %}Resident Dashboard - SmartServe{% endblock %}
-
-{% block content %}
+{% extends 'base.html' %} {% block title %}Resident Dashboard - SmartServe{%
+endblock %} {% block content %}
 <div class="page-header resident-portal">
     <div class="container">
         <h1>Welcome, {{ user.first_name }}!</h1>
@@ -12,14 +9,11 @@
 
 <div class="portal-content">
     <div class="container">
-        {% with messages = get_flashed_messages(with_categories=true) %}
-            {% if messages %}
-                {% for category, message in messages %}
-                    <div class="alert alert-{{ category }}">{{ message }}</div>
-                {% endfor %}
-            {% endif %}
-        {% endwith %}
-        
+        {% with messages = get_flashed_messages(with_categories=true) %} {% if
+        messages %} {% for category, message in messages %}
+        <div class="alert alert-{{ category }}">{{ message }}</div>
+        {% endfor %} {% endif %} {% endwith %}
+
         <!-- Dashboard Statistics -->
         <div class="dashboard-section">
             <h2>Your Statistics</h2>
@@ -42,7 +36,7 @@
                 </div>
             </div>
         </div>
-        
+
         <!-- Actions -->
         <div class="actions-section">
             <h2>Quick Actions</h2>
@@ -51,7 +45,7 @@
                     <span class="icon">+</span>
                     <span>New Request</span>
                 </a>
-                <a href="#" class="action-btn">
+                <a href="{{ url_for('profile') }}" class="action-btn">
                     <span class="icon">👤</span>
                     <span>My Profile</span>
                 </a>
@@ -61,30 +55,42 @@
                 </a>
             </div>
         </div>
-        
+
         <!-- Recent Requests -->
         <div class="requests-section">
             <h2>Your Requests</h2>
             {% if requests %}
-                <div class="request-list">
-                    {% for req in requests %}
-                        <div class="request-item">
-                            <div class="request-header">
-                                <h3>{{ req.document_type|replace('_', ' ')|title }}</h3>
-                                <span class="status status-{{ req.status }}">{{ req.status|upper }}</span>
-                            </div>
-                            <p><strong>Request ID:</strong> #{{ req.id }}</p>
-                            <p><strong>Description:</strong> {{ req.description }}</p>
-                            <p><strong>Submitted:</strong> {{ req.created_at.strftime('%Y-%m-%d %H:%M') }}</p>
-                            {% if req.admin_notes %}
-                                <p><strong>Admin Notes:</strong> {{ req.admin_notes }}</p>
-                            {% endif %}
-                            <a href="{{ url_for('view_request', request_id=req.id) }}" class="btn btn-primary btn-sm">View Details</a>
-                        </div>
-                    {% endfor %}
+            <div class="request-list">
+                {% for req in requests %}
+                <div class="request-item">
+                    <div class="request-header">
+                        <h3>{{ req.document_type|replace('_', ' ')|title }}</h3>
+                        <span class="status status-{{ req.status }}"
+                            >{{ req.status|upper }}</span
+                        >
+                    </div>
+                    <p><strong>Request ID:</strong> #{{ req.id }}</p>
+                    <p><strong>Description:</strong> {{ req.description }}</p>
+                    <p>
+                        <strong>Submitted:</strong> {{
+                        req.created_at.strftime('%Y-%m-%d %H:%M') }}
+                    </p>
+                    {% if req.admin_notes %}
+                    <p><strong>Admin Notes:</strong> {{ req.admin_notes }}</p>
+                    {% endif %}
+                    <a
+                        href="{{ url_for('view_request', request_id=req.id) }}"
+                        class="btn btn-primary btn-sm"
+                        >View Details</a
+                    >
                 </div>
+                {% endfor %}
+            </div>
             {% else %}
-                <p>No requests yet. <a href="{{ url_for('submit_request') }}">Submit one now</a></p>
+            <p>
+                No requests yet.
+                <a href="{{ url_for('submit_request') }}">Submit one now</a>
+            </p>
             {% endif %}
         </div>
     </div>
